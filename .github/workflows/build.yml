@@ -1,0 +1,49 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Step 2: Set up CMake
+    - name: Set up CMake
+      uses: lukka/setup-cmake@v1
+
+    # Step 3: Install dependencies (if required)
+    # If you need additional dependencies like g++, uncomment below:
+    # - name: Install dependencies
+    #   run: sudo apt-get install -y build-essential
+
+    # Step 4: Configure the build with CMake
+    - name: Configure with CMake
+      run: cmake -S . -B build
+
+    # Step 5: Build the project
+    - name: Build with CMake
+      run: cmake --build build
+
+    # Step 6: Run tests using ctest
+    - name: Run Tests
+      run: |
+        cd build
+        ctest --output-on-failure
+
+    # Step 7 (Optional): Upload test results as artifacts
+    - name: Upload Test Results
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: build/Testing/Temporary
