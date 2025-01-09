@@ -16,5 +16,6 @@ TEST(AdditionTest, HandlesNegativeNumbers) {
 
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
+    // "test"
     return RUN_ALL_TESTS();
 }
